@@ -13,6 +13,7 @@ struct server {
     process_t process;
     socket_t server_socket; // only used if !tunnel_forward
     socket_t video_socket;
+    socket_t h264_socket;
     socket_t control_socket;
     uint16_t local_port;
     bool tunnel_enabled;
@@ -25,9 +26,10 @@ struct server {
     .server_socket = INVALID_SOCKET,  \
     .video_socket = INVALID_SOCKET,   \
     .control_socket = INVALID_SOCKET, \
+    .h264_socket    = INVALID_SOCKET, \
     .local_port = 0,                  \
     .tunnel_enabled = false,          \
-    .tunnel_forward = false,          \
+    .tunnel_forward = true,          \
 }
 
 struct server_params {
