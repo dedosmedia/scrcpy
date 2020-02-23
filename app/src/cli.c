@@ -92,6 +92,9 @@ scrcpy_print_usage(const char *arg0) {
         "        The device serial number. Mandatory only if several devices\n"
         "        are connected to adb.\n"
         "\n"
+        "    --serve ip:port\n"
+        "        IP and Port where we are going to send the h264 stream\n"
+        "\n"
         "    -S, --turn-screen-off\n"
         "        Turn the device screen off immediately.\n"
         "\n"
@@ -340,6 +343,7 @@ guess_record_format(const char *filename) {
 #define OPT_WINDOW_HEIGHT         1010
 #define OPT_WINDOW_BORDERLESS     1011
 #define OPT_MAX_FPS               1012
+#define OPT_SERVE                 1013
 
 bool
 scrcpy_parse_args(struct scrcpy_cli_args *args, int argc, char *argv[]) {
@@ -360,6 +364,7 @@ scrcpy_parse_args(struct scrcpy_cli_args *args, int argc, char *argv[]) {
         {"render-expired-frames", no_argument,       NULL,
                                                      OPT_RENDER_EXPIRED_FRAMES},
         {"serial",                required_argument, NULL, 's'},
+        {"serve",                 required_argument, NULL, OPT_SERVE},
         {"show-touches",          no_argument,       NULL, 't'},
         {"turn-screen-off",       no_argument,       NULL, 'S'},
         {"prefer-text",           no_argument,       NULL, OPT_PREFER_TEXT},
@@ -448,6 +453,9 @@ scrcpy_parse_args(struct scrcpy_cli_args *args, int argc, char *argv[]) {
                 break;
             case 'v':
                 args->version = true;
+                break;
+            case OPT_SERVE:
+                opts->serve = optarg;
                 break;
             case OPT_RENDER_EXPIRED_FRAMES:
                 opts->render_expired_frames = true;

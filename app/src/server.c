@@ -147,6 +147,8 @@ execute_server(struct server *server, const struct server_params *params) {
         "true", // always send frame meta (packet boundaries + timestamp)
         params->control ? "true" : "false",
     };
+
+    LOGE("%s", server->tunnel_forward?"tuneel true":"tunell false");
 #ifdef SERVER_DEBUGGER
     LOGI("Server debugger waiting for a client on device port "
          SERVER_DEBUGGER_PORT "...");
@@ -278,6 +280,7 @@ server_start(struct server *server, const char *serial,
 
 bool
 server_connect_to(struct server *server) {
+
     if (!server->tunnel_forward) {
         server->video_socket = net_accept(server->server_socket);
         if (server->video_socket == INVALID_SOCKET) {
@@ -290,9 +293,24 @@ server_connect_to(struct server *server) {
             return false;
         }
 
+        server->h264_socket = net_accept(server->h264_socket);
+        if (server->h264_socket == INVALID_SOCKET) {
+            // the h264_socket will be cleaned up on destroy
+            return false;
+        }
+
+        server->h264_socket = listen_on_port(2020);
+        if (server->h264_socket == INVALID_SOCKET) {
+            LOGE("Could not listen on port %" PRIu16, 2020);
+            return false;
+        }
+
+
+
         // we don't need the server socket anymore
         close_socket(&server->server_socket);
     } else {
+        
         uint32_t attempts = 100;
         uint32_t delay = 100; // ms
         server->video_socket =
@@ -326,6 +344,10 @@ server_stop(struct server *server) {
     }
     if (server->control_socket != INVALID_SOCKET) {
         close_socket(&server->control_socket);
+    }
+
+    if (server->h264_socket != INVALID_SOCKET) {
+        close_socket(&server->h264_socket);
     }
 
     assert(server->process != PROCESS_NONE);
