@@ -29,7 +29,7 @@ struct server {
     .h264_socket    = INVALID_SOCKET, \
     .local_port = 0,                  \
     .tunnel_enabled = false,          \
-    .tunnel_forward = true,          \
+    .tunnel_forward = false,          \
 }
 
 struct server_params {
