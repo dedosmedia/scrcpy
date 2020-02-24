@@ -1,5 +1,7 @@
 # scrcpy (v1.12.1)
 
+H264 Test
+
 This application provides display and control of Android devices connected on
 USB (or [over TCP/IP][article-tcpip]). It does not require any _root_ access.
 It works on _GNU/Linux_, _Windows_ and _macOS_.
@@ -8,15 +10,14 @@ It works on _GNU/Linux_, _Windows_ and _macOS_.
 
 It focuses on:
 
- - **lightness** (native, displays only the device screen)
- - **performance** (30~60fps)
- - **quality** (1920×1080 or above)
- - **low latency** ([35~70ms][lowlatency])
- - **low startup time** (~1 second to display the first image)
- - **non-intrusiveness** (nothing is left installed on the device)
+- **lightness** (native, displays only the device screen)
+- **performance** (30~60fps)
+- **quality** (1920×1080 or above)
+- **low latency** ([35~70ms][lowlatency])
+- **low startup time** (~1 second to display the first image)
+- **non-intrusiveness** (nothing is left installed on the device)
 
 [lowlatency]: https://github.com/Genymobile/scrcpy/pull/646
-
 
 ## Requirements
 
@@ -31,9 +32,7 @@ control it using keyboard and mouse.
 
 [control]: https://github.com/Genymobile/scrcpy/issues/70#issuecomment-373286323
 
-
 ## Get the app
-
 
 ### Linux
 
@@ -46,40 +45,37 @@ apt install scrcpy
 A [Snap] package is available: [`scrcpy`][snap-link].
 
 [snap-link]: https://snapstats.org/snaps/scrcpy
-
 [snap]: https://en.wikipedia.org/wiki/Snappy_(package_manager)
 
 For Arch Linux, an [AUR] package is available: [`scrcpy`][aur-link].
 
-[AUR]: https://wiki.archlinux.org/index.php/Arch_User_Repository
+[aur]: https://wiki.archlinux.org/index.php/Arch_User_Repository
 [aur-link]: https://aur.archlinux.org/packages/scrcpy/
 
 For Gentoo, an [Ebuild] is available: [`scrcpy/`][ebuild-link].
 
-[Ebuild]: https://wiki.gentoo.org/wiki/Ebuild
+[ebuild]: https://wiki.gentoo.org/wiki/Ebuild
 [ebuild-link]: https://github.com/maggu2810/maggu2810-overlay/tree/master/app-mobilephone/scrcpy
 
-You could also [build the app manually][BUILD] (don't worry, it's not that
+You could also [build the app manually][build] (don't worry, it's not that
 hard).
-
-
 
 ### Windows
 
 For Windows, for simplicity, prebuilt archives with all the dependencies
 (including `adb`) are available:
 
- - [`scrcpy-win32-v1.12.1.zip`][direct-win32]  
-   _(SHA-256: 0f4b3b063536b50a2df05dc42c760f9cc0093a9a26dbdf02d8232c74dab43480)_
- - [`scrcpy-win64-v1.12.1.zip`][direct-win64]  
-   _(SHA-256: 57d34b6d16cfd9fe169bc37c4df58ebd256d05c1ea3febc63d9cb0a027ab47c9)_
+- [`scrcpy-win32-v1.12.1.zip`][direct-win32]  
+  _(SHA-256: 0f4b3b063536b50a2df05dc42c760f9cc0093a9a26dbdf02d8232c74dab43480)_
+- [`scrcpy-win64-v1.12.1.zip`][direct-win64]  
+  _(SHA-256: 57d34b6d16cfd9fe169bc37c4df58ebd256d05c1ea3febc63d9cb0a027ab47c9)_
 
 [direct-win32]: https://github.com/Genymobile/scrcpy/releases/download/v1.12.1/scrcpy-win32-v1.12.1.zip
 [direct-win64]: https://github.com/Genymobile/scrcpy/releases/download/v1.12.1/scrcpy-win64-v1.12.1.zip
 
 It is also available in [Chocolatey]:
 
-[Chocolatey]: https://chocolatey.org/
+[chocolatey]: https://chocolatey.org/
 
 ```bash
 choco install scrcpy
@@ -91,14 +87,13 @@ You need `adb`, accessible from your `PATH`. If you don't have it yet:
 choco install adb
 ```
 
-You can also [build the app manually][BUILD].
-
+You can also [build the app manually][build].
 
 ### macOS
 
 The application is available in [Homebrew]. Just install it:
 
-[Homebrew]: https://brew.sh/
+[homebrew]: https://brew.sh/
 
 ```bash
 brew install scrcpy
@@ -110,8 +105,7 @@ You need `adb`, accessible from your `PATH`. If you don't have it yet:
 brew cask install android-platform-tools
 ```
 
-You can also [build the app manually][BUILD].
-
+You can also [build the app manually][build].
 
 ## Run
 
@@ -146,7 +140,6 @@ scrcpy -m 1024  # short version
 The other dimension is computed to that the device aspect ratio is preserved.
 That way, a device in 1920×1080 will be mirrored at 1024×576.
 
-
 #### Change bit-rate
 
 The default bit-rate is 8 Mbps. To change the video bitrate (e.g. to 2 Mbps):
@@ -176,7 +169,6 @@ scrcpy --crop 1224:1440:0:0   # 1224x1440 at offset (0,0)
 
 If `--max-size` is also specified, resizing is applied after cropping.
 
-
 ### Recording
 
 It is possible to record the screen while mirroring:
@@ -201,7 +193,6 @@ variation] does not impact the recorded file.
 
 [packet delay variation]: https://en.wikipedia.org/wiki/Packet_delay_variation
 
-
 ### Connection
 
 #### Wireless
@@ -224,7 +215,6 @@ scrcpy -b2M -m800  # short version
 ```
 
 [connect]: https://developer.android.com/studio/command-line/adb.html#wireless
-
 
 #### Multi-devices
 
@@ -313,7 +303,6 @@ scrcpy -f  # short version
 
 Fullscreen can then be toggled dynamically with `Ctrl`+`f`.
 
-
 ### Other mirroring options
 
 #### Read-only
@@ -368,7 +357,6 @@ scrcpy -t
 
 Note that it only shows _physical_ touches (with the finger on the device).
 
-
 ### Input control
 
 #### Rotate device screen
@@ -383,16 +371,17 @@ requested orientation.
 It is possible to synchronize clipboards between the computer and the device, in
 both directions:
 
- - `Ctrl`+`c` copies the device clipboard to the computer clipboard;
- - `Ctrl`+`Shift`+`v` copies the computer clipboard to the device clipboard;
- - `Ctrl`+`v` _pastes_ the computer clipboard as a sequence of text events (but
-   breaks non-ASCII characters).
+- `Ctrl`+`c` copies the device clipboard to the computer clipboard;
+- `Ctrl`+`Shift`+`v` copies the computer clipboard to the device clipboard;
+- `Ctrl`+`v` _pastes_ the computer clipboard as a sequence of text events (but
+  breaks non-ASCII characters).
 
 #### Text injection preference
 
 There are two kinds of [events][textevents] generated when typing text:
- - _key events_, signaling that a key is pressed or released;
- - _text events_, signaling that a text has been entered.
+
+- _key events_, signaling that a key is pressed or released;
+- _text events_, signaling that a text has been entered.
 
 By default, letters are injected using key events, so that the keyboard behaves
 as expected in games (typically for WASD keys).
@@ -409,7 +398,6 @@ scrcpy --prefer-text
 [textevents]: https://blog.rom1v.com/2018/03/introducing-scrcpy/#handle-text-input
 [prefertext]: https://github.com/Genymobile/scrcpy/issues/650#issuecomment-512945343
 
-
 ### File drop
 
 #### Install APK
@@ -418,7 +406,6 @@ To install an APK, drag & drop an APK file (ending with `.apk`) to the _scrcpy_
 window.
 
 There is no visual feedback, a log is printed to the console.
-
 
 #### Push file to device
 
@@ -433,44 +420,41 @@ The target directory can be changed on start:
 scrcpy --push-target /sdcard/foo/bar/
 ```
 
-
 ### Audio forwarding
 
-Audio is not forwarded by _scrcpy_. Use [USBaudio] (Linux-only).
+Audio is not forwarded by _scrcpy_. Use [USBaudio](Linux-only).
 
 Also see [issue #14].
 
-[USBaudio]: https://github.com/rom1v/usbaudio
+[usbaudio]: https://github.com/rom1v/usbaudio
 [issue #14]: https://github.com/Genymobile/scrcpy/issues/14
-
 
 ## Shortcuts
 
- | Action                                 |   Shortcut                    |   Shortcut (macOS)
- | -------------------------------------- |:----------------------------- |:-----------------------------
- | Switch fullscreen mode                 | `Ctrl`+`f`                    | `Cmd`+`f`
- | Resize window to 1:1 (pixel-perfect)   | `Ctrl`+`g`                    | `Cmd`+`g`
- | Resize window to remove black borders  | `Ctrl`+`x` \| _Double-click¹_ | `Cmd`+`x`  \| _Double-click¹_
- | Click on `HOME`                        | `Ctrl`+`h` \| _Middle-click_  | `Ctrl`+`h` \| _Middle-click_
- | Click on `BACK`                        | `Ctrl`+`b` \| _Right-click²_  | `Cmd`+`b`  \| _Right-click²_
- | Click on `APP_SWITCH`                  | `Ctrl`+`s`                    | `Cmd`+`s`
- | Click on `MENU`                        | `Ctrl`+`m`                    | `Ctrl`+`m`
- | Click on `VOLUME_UP`                   | `Ctrl`+`↑` _(up)_             | `Cmd`+`↑` _(up)_
- | Click on `VOLUME_DOWN`                 | `Ctrl`+`↓` _(down)_           | `Cmd`+`↓` _(down)_
- | Click on `POWER`                       | `Ctrl`+`p`                    | `Cmd`+`p`
- | Power on                               | _Right-click²_                | _Right-click²_
- | Turn device screen off (keep mirroring)| `Ctrl`+`o`                    | `Cmd`+`o`
- | Rotate device screen                   | `Ctrl`+`r`                    | `Cmd`+`r`
- | Expand notification panel              | `Ctrl`+`n`                    | `Cmd`+`n`
- | Collapse notification panel            | `Ctrl`+`Shift`+`n`            | `Cmd`+`Shift`+`n`
- | Copy device clipboard to computer      | `Ctrl`+`c`                    | `Cmd`+`c`
- | Paste computer clipboard to device     | `Ctrl`+`v`                    | `Cmd`+`v`
- | Copy computer clipboard to device      | `Ctrl`+`Shift`+`v`            | `Cmd`+`Shift`+`v`
- | Enable/disable FPS counter (on stdout) | `Ctrl`+`i`                    | `Cmd`+`i`
+| Action                                  | Shortcut                      | Shortcut (macOS)             |
+| --------------------------------------- | :---------------------------- | :--------------------------- |
+| Switch fullscreen mode                  | `Ctrl`+`f`                    | `Cmd`+`f`                    |
+| Resize window to 1:1 (pixel-perfect)    | `Ctrl`+`g`                    | `Cmd`+`g`                    |
+| Resize window to remove black borders   | `Ctrl`+`x` \| _Double-click¹_ | `Cmd`+`x` \| _Double-click¹_ |
+| Click on `HOME`                         | `Ctrl`+`h` \| _Middle-click_  | `Ctrl`+`h` \| _Middle-click_ |
+| Click on `BACK`                         | `Ctrl`+`b` \| _Right-click²_  | `Cmd`+`b` \| _Right-click²_  |
+| Click on `APP_SWITCH`                   | `Ctrl`+`s`                    | `Cmd`+`s`                    |
+| Click on `MENU`                         | `Ctrl`+`m`                    | `Ctrl`+`m`                   |
+| Click on `VOLUME_UP`                    | `Ctrl`+`↑` _(up)_             | `Cmd`+`↑` _(up)_             |
+| Click on `VOLUME_DOWN`                  | `Ctrl`+`↓` _(down)_           | `Cmd`+`↓` _(down)_           |
+| Click on `POWER`                        | `Ctrl`+`p`                    | `Cmd`+`p`                    |
+| Power on                                | _Right-click²_                | _Right-click²_               |
+| Turn device screen off (keep mirroring) | `Ctrl`+`o`                    | `Cmd`+`o`                    |
+| Rotate device screen                    | `Ctrl`+`r`                    | `Cmd`+`r`                    |
+| Expand notification panel               | `Ctrl`+`n`                    | `Cmd`+`n`                    |
+| Collapse notification panel             | `Ctrl`+`Shift`+`n`            | `Cmd`+`Shift`+`n`            |
+| Copy device clipboard to computer       | `Ctrl`+`c`                    | `Cmd`+`c`                    |
+| Paste computer clipboard to device      | `Ctrl`+`v`                    | `Cmd`+`v`                    |
+| Copy computer clipboard to device       | `Ctrl`+`Shift`+`v`            | `Cmd`+`Shift`+`v`            |
+| Enable/disable FPS counter (on stdout)  | `Ctrl`+`i`                    | `Cmd`+`i`                    |
 
 _¹Double-click on black borders to remove them._  
 _²Right-click turns the screen on if it was off, presses BACK otherwise._
-
 
 ## Custom paths
 
@@ -484,7 +468,6 @@ To override the path of the `scrcpy-server` file, configure its path in
 
 [useful]: https://github.com/Genymobile/scrcpy/issues/278#issuecomment-429330345
 
-
 ## Why _scrcpy_?
 
 A colleague challenged me to find a name as unpronounceable as [gnirehtet].
@@ -494,25 +477,21 @@ A colleague challenged me to find a name as unpronounceable as [gnirehtet].
 [gnirehtet]: https://github.com/Genymobile/gnirehtet
 [`strcpy`]: http://man7.org/linux/man-pages/man3/strcpy.3.html
 
-
 ## How to build?
 
 See [BUILD].
 
-[BUILD]: BUILD.md
-
+[build]: BUILD.md
 
 ## Common issues
 
 See the [FAQ](FAQ.md).
-
 
 ## Developers
 
 Read the [developers page].
 
 [developers page]: DEVELOP.md
-
 
 ## Licence
 
