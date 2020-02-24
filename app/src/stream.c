@@ -232,8 +232,7 @@ run_stream(void *data) {
             break;
         }
 
-        net_send(stream->h264_socket, packet.buf, packet.size);
-        printf("%d\n", packet.size);
+        net_send(stream->h264_socket, packet.data, packet.size);
 
         ok = stream_push_packet(stream, &packet);
         av_packet_unref(&packet);
