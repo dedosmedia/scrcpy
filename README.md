@@ -1,7 +1,5 @@
 # scrcpy (v1.12.1)
 
-H264 Test
-
 This application provides display and control of Android devices connected on
 USB (or [over TCP/IP][article-tcpip]). It does not require any _root_ access.
 It works on _GNU/Linux_, _Windows_ and _macOS_.
