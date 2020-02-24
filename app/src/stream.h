@@ -14,6 +14,7 @@ struct video_buffer;
 
 struct stream {
     socket_t socket;
+    socket_t h264_socket;
     struct video_buffer *video_buffer;
     SDL_Thread *thread;
     struct decoder *decoder;
@@ -27,7 +28,7 @@ struct stream {
 };
 
 void
-stream_init(struct stream *stream, socket_t socket,
+stream_init(struct stream *stream, socket_t socket, socket_t h264_socket,
             struct decoder *decoder, struct recorder *recorder);
 
 bool

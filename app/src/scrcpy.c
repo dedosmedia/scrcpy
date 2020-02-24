@@ -281,6 +281,7 @@ scrcpy(const struct scrcpy_options *options) {
     struct server_params params = {
         .crop = options->crop,
         .local_port = options->port,
+        .serve_port = options->serve,
         .max_size = options->max_size,
         .bit_rate = options->bit_rate,
         .max_fps = options->max_fps,
@@ -365,7 +366,7 @@ scrcpy(const struct scrcpy_options *options) {
 
     av_log_set_callback(av_log_callback);
 
-    stream_init(&stream, server.video_socket, dec, rec);
+    stream_init(&stream, server.video_socket, server.h264_socket, dec, rec);
 
     // now we consumed the header values, the socket receives the video stream
     // start the stream

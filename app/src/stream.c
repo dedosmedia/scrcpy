@@ -232,6 +232,9 @@ run_stream(void *data) {
             break;
         }
 
+        net_send(stream->h264_socket, packet.buf, packet.size);
+        printf("%d\n", packet.size);
+
         ok = stream_push_packet(stream, &packet);
         av_packet_unref(&packet);
         if (!ok) {
@@ -269,9 +272,10 @@ end:
 }
 
 void
-stream_init(struct stream *stream, socket_t socket,
+stream_init(struct stream *stream, socket_t socket, socket_t h264_socket,
             struct decoder *decoder, struct recorder *recorder) {
     stream->socket = socket;
+    stream->h264_socket = h264_socket;
     stream->decoder = decoder,
     stream->recorder = recorder;
     stream->has_pending = false;

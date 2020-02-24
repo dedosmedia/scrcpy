@@ -32,7 +32,7 @@ struct scrcpy_options {
     bool render_expired_frames;
     bool prefer_text;
     bool window_borderless;
-    const char *serve;
+    uint16_t serve;
 };
 
 #define SCRCPY_OPTIONS_DEFAULT { \
@@ -59,7 +59,7 @@ struct scrcpy_options {
     .render_expired_frames = false, \
     .prefer_text = false, \
     .window_borderless = false, \
-    .serve = NULL, \
+    .serve = DEFAULT_SERVE_PORT, \
 }
 
 bool

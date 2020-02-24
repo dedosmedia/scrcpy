@@ -92,8 +92,9 @@ scrcpy_print_usage(const char *arg0) {
         "        The device serial number. Mandatory only if several devices\n"
         "        are connected to adb.\n"
         "\n"
-        "    --serve ip:port\n"
-        "        IP and Port where we are going to send the h264 stream\n"
+        "    --serve port\n"
+        "        Set the TCP port h264 stream is served\n"
+        "        Default is %d.\n"
         "\n"
         "    -S, --turn-screen-off\n"
         "        Turn the device screen off immediately.\n"
@@ -196,7 +197,7 @@ scrcpy_print_usage(const char *arg0) {
         arg0,
         DEFAULT_BIT_RATE,
         DEFAULT_MAX_SIZE, DEFAULT_MAX_SIZE ? "" : " (unlimited)",
-        DEFAULT_LOCAL_PORT);
+        DEFAULT_LOCAL_PORT, DEFAULT_SERVE_PORT);
 }
 
 static bool
@@ -297,6 +298,20 @@ parse_port(const char *s, uint16_t *port) {
     }
 
     *port = (uint16_t) value;
+    return true;
+}
+
+static bool
+parse_serve(const char *s, uint16_t *serve) {
+    long value;
+    bool ok = parse_integer_arg(s, &value, false, 0, 0xFFFF, "serve");
+    if (!ok) {
+        return false;
+    }
+
+    *serve = (uint16_t) value;
+
+    LOGE("PARSE_SERVE %ld", value);
     return true;
 }
 
@@ -455,7 +470,9 @@ scrcpy_parse_args(struct scrcpy_cli_args *args, int argc, char *argv[]) {
                 args->version = true;
                 break;
             case OPT_SERVE:
-                opts->serve = optarg;
+                if (!parse_serve(optarg, &opts->serve)) {
+                    return false;
+                }
                 break;
             case OPT_RENDER_EXPIRED_FRAMES:
                 opts->render_expired_frames = true;

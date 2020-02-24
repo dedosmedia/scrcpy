@@ -16,6 +16,7 @@ struct server {
     socket_t h264_socket;
     socket_t control_socket;
     uint16_t local_port;
+    uint16_t serve_port;
     bool tunnel_enabled;
     bool tunnel_forward; // use "adb forward" instead of "adb reverse"
 };
@@ -35,6 +36,7 @@ struct server {
 struct server_params {
     const char *crop;
     uint16_t local_port;
+    uint16_t serve_port;
     uint16_t max_size;
     uint32_t bit_rate;
     uint16_t max_fps;

@@ -224,6 +224,7 @@ bool
 server_start(struct server *server, const char *serial,
              const struct server_params *params) {
     server->local_port = params->local_port;
+    server->serve_port = params->serve_port;
 
     if (serial) {
         server->serial = SDL_strdup(serial);
@@ -292,20 +293,28 @@ server_connect_to(struct server *server) {
             // the video_socket will be cleaned up on destroy
             return false;
         }
-
-        server->h264_socket = net_accept(server->h264_socket);
+        
+  
+        LOGI("%d ",server->serve_port);
+        socket_t ClientSocket = listen_on_port(server->serve_port);
+        if (ClientSocket == INVALID_SOCKET) {
+            LOGI("Client Error");
+            net_close(ClientSocket);
+            return false;
+        }
+        LOGI("Waiting socket connection for streaming h264");
+        
+        server->h264_socket =  net_accept(ClientSocket);
         if (server->h264_socket == INVALID_SOCKET) {
             // the h264_socket will be cleaned up on destroy
+            net_close(server->h264_socket);
+            LOGE("h264_socket error");
             return false;
         }
-
-        server->h264_socket = listen_on_port(2020);
-        if (server->h264_socket == INVALID_SOCKET) {
-            LOGE("Could not listen on port %" PRIu16, 2020);
-            return false;
-        }
-
-
+        // we don't need the client socket anymore
+        close_socket(&ClientSocket);
+      
+        
 
         // we don't need the server socket anymore
         close_socket(&server->server_socket);

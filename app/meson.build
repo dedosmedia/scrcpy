@@ -102,6 +102,11 @@ conf.set('PORTABLE', get_option('portable'))
 # overridden by option --port
 conf.set('DEFAULT_LOCAL_PORT', '27183')
 
+# the default client TCP port h264 stream is served
+# overridden by option --serve
+conf.set('DEFAULT_SERVE_PORT', '27184')
+
+
 # the default max video size for both dimensions, in pixels
 # overridden by option --max-size
 conf.set('DEFAULT_MAX_SIZE', '0')  # 0: unlimited
