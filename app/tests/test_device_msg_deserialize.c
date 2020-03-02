@@ -22,7 +22,7 @@ static void test_deserialize_clipboard(void) {
     device_msg_destroy(&msg);
 }
 
-int main(void) {
+int main(int argc, char *argv[]){
     test_deserialize_clipboard();
     return 0;
 }

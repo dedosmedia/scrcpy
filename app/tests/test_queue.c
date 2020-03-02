@@ -32,7 +32,7 @@ static void test_queue(void) {
     assert(queue_is_empty(&queue));
 }
 
-int main(void) {
+int main(int argc, char *argv[]){
     test_queue();
     return 0;
 }
