@@ -109,6 +109,9 @@ public class Controller {
             case ControlMessage.TYPE_ROTATE_DEVICE:
                 device.rotateDevice();
                 break;
+            case ControlMessage.TYPE_TAKE_SCREENSHOT:
+                device.takeScreenshot();
+                break;
             default:
                 // do nothing
         }

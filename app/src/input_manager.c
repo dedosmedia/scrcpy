@@ -221,6 +221,16 @@ rotate_device(struct controller *controller) {
     }
 }
 
+static void
+take_screenshot(struct controller *controller) {
+    struct control_msg msg;
+    msg.type = CONTROL_MSG_TYPE_TAKE_SCREENSHOT;
+
+    if (!controller_push_msg(controller, &msg)) {
+        LOGW("Could not request screenshot");
+    }
+}
+
 void
 input_manager_process_text_input(struct input_manager *im,
                                  const SDL_TextInputEvent *event) {
@@ -318,8 +328,13 @@ input_manager_process_key(struct input_manager *im,
                 }
                 return;
             case SDLK_s:
-                if (control && cmd && !shift && !repeat) {
-                    action_app_switch(controller, action);
+                if (control && cmd && !repeat && down) {
+                    LOGI("CONTROL S");
+                    if(shift){
+                        take_screenshot(controller);
+                    } else {
+                        action_app_switch(controller, action);
+                    }
                 }
                 return;
             case SDLK_m:

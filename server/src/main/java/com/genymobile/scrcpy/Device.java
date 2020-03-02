@@ -4,12 +4,24 @@ import com.genymobile.scrcpy.wrappers.ServiceManager;
 import com.genymobile.scrcpy.wrappers.SurfaceControl;
 import com.genymobile.scrcpy.wrappers.WindowManager;
 
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.os.Build;
+import android.os.Environment;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.TimingLogger;
 import android.view.IRotationWatcher;
 import android.view.InputEvent;
+import android.view.Surface;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import android.graphics.Bitmap;
+
+
 
 public final class Device {
 
@@ -64,7 +76,7 @@ public final class Device {
         }
 
         Size videoSize = computeVideoSize(contentRect.width(), contentRect.height(), maxSize);
-        return new ScreenInfo(contentRect, videoSize, rotated);
+        return new ScreenInfo(contentRect, deviceSize, videoSize, rotated, displayInfo.getRotation());
     }
 
     private static String formatCrop(Rect rect) {
@@ -191,6 +203,100 @@ public final class Device {
             wm.thawRotation();
         }
     }
+
+    /**
+     * Take screenshot taking into account --crop parameter and screen rotation.
+     * Basically it saves what you see on scrcpy window.
+     */
+    public void takeScreenshot(){
+        try {
+            Bitmap bitmap = null;
+            ScreenInfo screenInfo = getScreenInfo(); // read with synchronization
+
+            String className;
+            int sdkInt = Build.VERSION.SDK_INT;
+            if (sdkInt > Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                className = "android.view.SurfaceControl";
+            } else {
+                className = "android.view.Surface";
+            }
+
+            Method declaredMethod;
+            Class<?> clazz = Class.forName(className);
+
+            if (sdkInt >= Build.VERSION_CODES.P) { // Pie+
+                declaredMethod =
+                        clazz.getDeclaredMethod(
+                                "screenshot",
+                                Rect.class,
+                                Integer.TYPE,
+                                Integer.TYPE,
+                                Integer.TYPE);
+
+                bitmap = (Bitmap) declaredMethod.invoke(null, new Rect(), screenInfo.getDeviceSize().getWidth(), screenInfo.getDeviceSize().getHeight(), screenInfo.getRotation());
+
+            } else {
+                // I don't know how to implement rotation on Pie- versions
+                declaredMethod =
+                        clazz.getDeclaredMethod("screenshot", Integer.TYPE, Integer.TYPE);
+                bitmap = (Bitmap) declaredMethod.invoke(null, new Object[] {screenInfo.getDeviceSize().getWidth(), screenInfo.getDeviceSize().getHeight()});
+            }
+
+            if (bitmap != null)
+            {
+                Ln.d(">>> bmp generated.");
+                cropAndSaveImage(bitmap, screenInfo.getContentRect());
+            }
+
+
+
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+    /**
+     * Temp method for saving image to disk. We should send it another way
+     * @param bitmap
+     * @param crop
+     */
+    // TODO: Do it in another Thread?
+    // TODO: Choose a picture format
+    // TODO: Choose a default name
+
+    private void cropAndSaveImage(Bitmap bitmap, Rect crop) {
+
+        Matrix matrix = new Matrix();
+        Bitmap finalBitmap = Bitmap.createBitmap(bitmap, crop.left, crop.top, crop.width(), crop.height(), matrix, true);
+
+
+        String root = Environment.getExternalStorageDirectory().toString();
+        File myDir = new File(root + "/saved_images");
+        myDir.mkdirs();
+
+        String fname = "myphoto.jpg";
+
+        File file = new File(myDir, fname);
+        if (file.exists()) file.delete ();
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     static Rect flipRect(Rect crop) {
         return new Rect(crop.top, crop.left, crop.bottom, crop.right);
