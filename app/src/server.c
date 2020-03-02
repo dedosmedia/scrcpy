@@ -132,8 +132,8 @@ execute_server(struct server *server, const struct server_params *params) {
         "CLASSPATH=" DEVICE_SERVER_PATH,
         "app_process",
 #ifdef SERVER_DEBUGGER
-# define SERVER_DEBUGGER_PORT "5005"
-        "-agentlib:jdwp=transport=dt_socket,suspend=y,server=y,address="
+#define SERVER_DEBUGGER_PORT "5005"
+        "-XjdwpProvider:internal -XjdwpOptions:transport=dt_socket,suspend=n,server=y,address="
             SERVER_DEBUGGER_PORT,
 #endif
         "/", // unused
