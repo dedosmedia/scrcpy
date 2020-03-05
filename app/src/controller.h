@@ -24,7 +24,7 @@ struct controller {
 };
 
 bool
-controller_init(struct controller *controller, socket_t control_socket);
+controller_init(struct controller *controller, socket_t control_socket, struct file_handler *file_handler);
 
 void
 controller_destroy(struct controller *controller);

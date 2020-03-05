@@ -168,6 +168,27 @@ adb_push(const char *serial, const char *local, const char *remote) {
 }
 
 process_t
+adb_pull(const char *serial, const char *remote) {
+#ifdef __WINDOWS__
+    // Windows will parse the string, so the paths must be quoted
+    // (see sys/win/command.c)
+    remote = strquote(remote);
+    if (!remote) {
+        return PROCESS_NONE;
+    }
+#endif
+
+    const char *const adb_cmd[] = {"pull", remote};
+    process_t proc = adb_execute(serial, adb_cmd, ARRAY_LEN(adb_cmd));
+
+#ifdef __WINDOWS__
+    SDL_free((void *) remote);
+#endif
+
+    return proc;
+}
+
+process_t
 adb_install(const char *serial, const char *local) {
 #ifdef __WINDOWS__
     // Windows will parse the string, so the local name must be quoted

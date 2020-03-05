@@ -73,6 +73,9 @@ process_t
 adb_push(const char *serial, const char *local, const char *remote);
 
 process_t
+adb_pull(const char *serial, const char *remote);
+
+process_t
 adb_install(const char *serial, const char *local);
 
 // convenience function to wait for a successful process execution

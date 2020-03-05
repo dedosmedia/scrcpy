@@ -3,6 +3,7 @@ package com.genymobile.scrcpy;
 public final class DeviceMessage {
 
     public static final int TYPE_CLIPBOARD = 0;
+    public static final int TYPE_SCREENSHOT = 1;
 
     private int type;
     private String text;
@@ -10,9 +11,9 @@ public final class DeviceMessage {
     private DeviceMessage() {
     }
 
-    public static DeviceMessage createClipboard(String text) {
+    public static DeviceMessage createMessage(int type, String text) {
         DeviceMessage event = new DeviceMessage();
-        event.type = TYPE_CLIPBOARD;
+        event.type = type;
         event.text = text;
         return event;
     }

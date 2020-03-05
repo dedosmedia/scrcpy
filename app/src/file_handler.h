@@ -12,6 +12,7 @@
 typedef enum {
     ACTION_INSTALL_APK,
     ACTION_PUSH_FILE,
+    ACTION_PULL_FILE,
 } file_handler_action_t;
 
 struct file_handler_request {

@@ -75,6 +75,11 @@ push_file(const char *serial, const char *file, const char *push_target) {
     return adb_push(serial, file, push_target);
 }
 
+static process_t
+pull_file(const char *serial, const char *file) {
+    return adb_pull(serial, file);
+}
+
 bool
 file_handler_request(struct file_handler *file_handler,
                      file_handler_action_t action, char *file) {
@@ -86,8 +91,12 @@ file_handler_request(struct file_handler *file_handler,
         file_handler->initialized = true;
     }
 
+    LOGI("ACTION %d",action);
+    
     LOGI("Request to %s %s", action == ACTION_INSTALL_APK ? "install" : "push",
                              file);
+
+
     struct file_handler_request req = {
         .action = action,
         .file = file,
@@ -124,32 +133,58 @@ run_file_handler(void *data) {
         (void) non_empty;
 
         process_t process;
-        if (req.action == ACTION_INSTALL_APK) {
-            LOGI("Installing %s...", req.file);
-            process = install_apk(file_handler->serial, req.file);
-        } else {
-            LOGI("Pushing %s...", req.file);
-            process = push_file(file_handler->serial, req.file,
-                                file_handler->push_target);
+        switch(req.action){
+            case ACTION_INSTALL_APK: {
+                LOGI("Installing %s...", req.file);
+                process = install_apk(file_handler->serial, req.file);
+            }
+            break;
+            case ACTION_PUSH_FILE: {
+                LOGI("Pushing %s...", req.file);
+                process = push_file(file_handler->serial, req.file,
+                                    file_handler->push_target);
+            }
+            break;
+            case ACTION_PULL_FILE: {
+                LOGI("Pulling %s...", req.file);
+                process = pull_file(file_handler->serial, req.file);
+            }
+            break;
+
         }
+        
         file_handler->current_process = process;
         mutex_unlock(file_handler->mutex);
 
-        if (req.action == ACTION_INSTALL_APK) {
-            if (process_check_success(process, "adb install")) {
-                LOGI("%s successfully installed", req.file);
-            } else {
-                LOGE("Failed to install %s", req.file);
+        switch(req.action){
+            case ACTION_INSTALL_APK: {
+                 if (process_check_success(process, "adb install")) {
+                    LOGI("%s successfully installed", req.file);
+                } else {
+                    LOGE("Failed to install %s", req.file);
+                }
             }
-        } else {
-            if (process_check_success(process, "adb push")) {
-                LOGI("%s successfully pushed to %s", req.file,
-                                                     file_handler->push_target);
-            } else {
-                LOGE("Failed to push %s to %s", req.file,
-                                                file_handler->push_target);
+            break;
+            case ACTION_PUSH_FILE:{
+                if (process_check_success(process, "adb push")) {
+                    LOGI("%s successfully pushed to %s", req.file,
+                                                        file_handler->push_target);
+                } else {
+                    LOGE("Failed to push %s to %s", req.file,
+                                                    file_handler->push_target);
+                }
             }
-        }
+            break;
+            case ACTION_PULL_FILE:{
+                if (process_check_success(process, "adb pull")) {
+                    LOGI("%s successfully pulled to %s", file_handler->push_target, req.file);
+                } else {
+                    LOGE("Failed to pull %s to %s", req.file,
+                                                    file_handler->push_target);
+                }
+            }
+            break;
+        }        
 
         file_handler_request_destroy(&req);
     }

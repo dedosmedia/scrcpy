@@ -7,12 +7,16 @@
 #include "device_msg.h"
 #include "util/lock.h"
 #include "util/log.h"
+#include "file_handler.h"
+
+struct receiver *receiver ;
 
 bool
-receiver_init(struct receiver *receiver, socket_t control_socket) {
+receiver_init(struct receiver *receiver, socket_t control_socket, struct file_handler *file_handler) {
     if (!(receiver->mutex = SDL_CreateMutex())) {
         return false;
     }
+    receiver->file_handler = file_handler;
     receiver->control_socket = control_socket;
     return true;
 }
@@ -22,6 +26,7 @@ receiver_destroy(struct receiver *receiver) {
     SDL_DestroyMutex(receiver->mutex);
 }
 
+
 static void
 process_msg(struct device_msg *msg) {
     switch (msg->type) {
@@ -29,6 +34,12 @@ process_msg(struct device_msg *msg) {
             LOGI("Device clipboard copied");
             SDL_SetClipboardText(msg->clipboard.text);
             break;
+        case DEVICE_MSG_TYPE_SCREENSHOT:
+            LOGI("Device screenshot %s",msg->clipboard.text);
+            file_handler_action_t action;
+            action = ACTION_PULL_FILE;
+            file_handler_request(receiver->file_handler, action, msg->clipboard.text);
+        break;
     }
 }
 
@@ -58,7 +69,7 @@ process_msgs(const unsigned char *buf, size_t len) {
 
 static int
 run_receiver(void *data) {
-    struct receiver *receiver = data;
+    receiver = data;
 
     unsigned char buf[DEVICE_MSG_SERIALIZED_MAX_SIZE];
     size_t head = 0;

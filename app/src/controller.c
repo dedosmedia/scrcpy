@@ -5,12 +5,14 @@
 #include "config.h"
 #include "util/lock.h"
 #include "util/log.h"
+#include "file_handler.h"
+
 
 bool
-controller_init(struct controller *controller, socket_t control_socket) {
+controller_init(struct controller *controller, socket_t control_socket, struct file_handler *file_handler) {
     cbuf_init(&controller->queue);
 
-    if (!receiver_init(&controller->receiver, control_socket)) {
+    if (!receiver_init(&controller->receiver, control_socket, file_handler)) {
         return false;
     }
 

@@ -208,7 +208,7 @@ public final class Device {
      * Take screenshot taking into account --crop parameter and screen rotation.
      * Basically it saves what you see on scrcpy window.
      */
-    public void takeScreenshot(){
+    public String takeScreenshot(){
         try {
             Bitmap bitmap = null;
             ScreenInfo screenInfo = getScreenInfo(); // read with synchronization
@@ -245,7 +245,7 @@ public final class Device {
             if (bitmap != null)
             {
                 Ln.d(">>> bmp generated.");
-                cropAndSaveImage(bitmap, screenInfo.getContentRect());
+                return cropAndSaveImage(bitmap, screenInfo.getContentRect());
             }
 
 
@@ -260,6 +260,7 @@ public final class Device {
             e.printStackTrace();
         }
 
+        return null;
 
     }
 
@@ -273,28 +274,30 @@ public final class Device {
     // TODO: Choose a picture format
     // TODO: Choose a default name
 
-    private void cropAndSaveImage(Bitmap bitmap, Rect crop) {
+    private String cropAndSaveImage(Bitmap bitmap, Rect crop) {
 
         Matrix matrix = new Matrix();
         Bitmap finalBitmap = Bitmap.createBitmap(bitmap, crop.left, crop.top, crop.width(), crop.height(), matrix, true);
 
 
         String root = Environment.getExternalStorageDirectory().toString();
-        File myDir = new File(root + "/saved_images");
+        File myDir = new File(root );
         myDir.mkdirs();
 
-        String fname = "myphoto.jpg";
+        String fname = "test.png";
 
         File file = new File(myDir, fname);
         if (file.exists()) file.delete ();
         try {
             FileOutputStream out = new FileOutputStream(file);
-            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            finalBitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
             out.flush();
             out.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Ln.d("P1: "+file.getAbsolutePath());
+        return file.getAbsolutePath();
     }
 
 

@@ -76,6 +76,7 @@ push_server(const char *serial) {
     return process_check_success(process, "adb push");
 }
 
+
 static bool
 enable_tunnel_reverse(const char *serial, uint16_t local_port) {
     process_t process = adb_reverse(serial, SOCKET_NAME, local_port);

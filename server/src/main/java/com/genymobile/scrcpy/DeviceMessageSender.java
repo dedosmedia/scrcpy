@@ -6,14 +6,16 @@ public final class DeviceMessageSender {
 
     private final DesktopConnection connection;
 
-    private String clipboardText;
+    private String message;
+    private int type;
 
     public DeviceMessageSender(DesktopConnection connection) {
         this.connection = connection;
     }
 
-    public synchronized void pushClipboardText(String text) {
-        clipboardText = text;
+    public synchronized void pushMessage(int _type, String text) {
+        message = text;
+        type = _type;
         notify();
     }
 
@@ -21,13 +23,13 @@ public final class DeviceMessageSender {
         while (true) {
             String text;
             synchronized (this) {
-                while (clipboardText == null) {
+                while (message == null) {
                     wait();
                 }
-                text = clipboardText;
-                clipboardText = null;
+                text = message;
+                message = null;
             }
-            DeviceMessage event = DeviceMessage.createClipboard(text);
+            DeviceMessage event = DeviceMessage.createMessage(type, text);
             connection.sendDeviceMessage(event);
         }
     }

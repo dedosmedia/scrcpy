@@ -98,7 +98,7 @@ public class Controller {
                 break;
             case ControlMessage.TYPE_GET_CLIPBOARD:
                 String clipboardText = device.getClipboardText();
-                sender.pushClipboardText(clipboardText);
+                sender.pushMessage(DeviceMessage.TYPE_CLIPBOARD, clipboardText);
                 break;
             case ControlMessage.TYPE_SET_CLIPBOARD:
                 device.setClipboardText(msg.getText());
@@ -110,7 +110,8 @@ public class Controller {
                 device.rotateDevice();
                 break;
             case ControlMessage.TYPE_TAKE_SCREENSHOT:
-                device.takeScreenshot();
+                String path = device.takeScreenshot();
+                sender.pushMessage(DeviceMessage.TYPE_SCREENSHOT, path);
                 break;
             default:
                 // do nothing
