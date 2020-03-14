@@ -85,19 +85,15 @@ file_handler_request(struct file_handler *file_handler,
                      file_handler_action_t action, char *file) {
     // start file_handler if it's used for the first time
     if (!file_handler->initialized) {
-        LOGI("NOT INITIALIZED");
         if (!file_handler_start(file_handler)) {
             return false;
         }
         file_handler->initialized = true;
     }
 
-    LOGI("ACTION %d",action);
-    
+    // TODO: pull
     LOGI("Request to %s %s", action == ACTION_INSTALL_APK ? "install" : "push",
                              file);
-
-
     struct file_handler_request req = {
         .action = action,
         .file = file,
@@ -153,7 +149,6 @@ run_file_handler(void *data) {
             break;
 
         }
-        
         file_handler->current_process = process;
         mutex_unlock(file_handler->mutex);
 

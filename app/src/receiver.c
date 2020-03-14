@@ -12,7 +12,7 @@
 static struct file_handler file_handler;
 bool file_handler_initialized = false;
 
-struct receiver *receiver ;
+
 
 bool
 receiver_init(struct receiver *receiver, socket_t control_socket, const char *serial) {
@@ -56,7 +56,7 @@ process_msg(struct device_msg *msg) {
             SDL_SetClipboardText(msg->clipboard.text);            
             break;
         case DEVICE_MSG_TYPE_SCREENSHOT:
-            LOGI("Device screenshot %s",msg->clipboard.text);
+            LOGI("Device screenshot pulling from %s",msg->clipboard.text);
             file_handler_action_t action;
             action = ACTION_PULL_FILE;
             file_handler_request(&file_handler, action, msg->clipboard.text);
@@ -90,7 +90,7 @@ process_msgs(const unsigned char *buf, size_t len) {
 
 static int
 run_receiver(void *data) {
-    receiver = data;
+     struct receiver *receiver = data;
 
     unsigned char buf[DEVICE_MSG_SERIALIZED_MAX_SIZE];
     size_t head = 0;
