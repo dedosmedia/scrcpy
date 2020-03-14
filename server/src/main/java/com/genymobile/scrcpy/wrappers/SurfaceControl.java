@@ -1,9 +1,11 @@
 package com.genymobile.scrcpy.wrappers;
 
 import com.genymobile.scrcpy.Ln;
+import com.genymobile.scrcpy.ScreenInfo;
 
 import android.annotation.SuppressLint;
 import android.graphics.Rect;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.IBinder;
 import android.view.Surface;
@@ -50,6 +52,8 @@ public final class SurfaceControl {
             throw new AssertionError(e);
         }
     }
+
+    
 
     public static void setDisplayProjection(IBinder displayToken, int orientation, Rect layerStackRect, Rect displayRect) {
         try {
@@ -111,6 +115,26 @@ public final class SurfaceControl {
         } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
             Ln.e("Could not invoke method", e);
             return null;
+        }
+    }
+
+
+    public static Bitmap takeScreenshot(ScreenInfo screenInfo) {
+        try {
+            int width = screenInfo.getDeviceSize().getWidth();
+            int height = screenInfo.getDeviceSize().getHeight();
+            int rotation = screenInfo.getRotation();
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                 return (Bitmap) CLASS.getMethod("screenshot", Rect.class, Integer.TYPE, Integer.TYPE, Integer.TYPE).invoke(null, new Rect(), width, height, rotation);
+            }
+            else {
+                
+                return (Bitmap) CLASS.getMethod("screenshot", Integer.TYPE, Integer.TYPE).invoke(null, new Object[] {width, height});
+            }                   
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            Ln.e("Could not invoke screenshot method", e);
+            return null;    
         }
     }
 

@@ -208,77 +208,30 @@ public final class Device {
      * Take screenshot taking into account --crop parameter and screen rotation.
      * Basically it saves what you see on scrcpy window.
      */
+
     public String takeScreenshot(){
-        try {
-            Bitmap bitmap = null;
-            ScreenInfo screenInfo = getScreenInfo(); // read with synchronization
+        ScreenInfo screenInfo = getScreenInfo(); // read with synchronization
+        Bitmap bitmap = null;
+        bitmap = SurfaceControl.takeScreenshot(screenInfo);
 
-            String className;
-            int sdkInt = Build.VERSION.SDK_INT;
-            if (sdkInt > Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                className = "android.view.SurfaceControl";
-            } else {
-                className = "android.view.Surface";
-            }
-
-            Method declaredMethod;
-            Class<?> clazz = Class.forName(className);
-
-            if (sdkInt >= Build.VERSION_CODES.P) { // Pie+
-                declaredMethod =
-                        clazz.getDeclaredMethod(
-                                "screenshot",
-                                Rect.class,
-                                Integer.TYPE,
-                                Integer.TYPE,
-                                Integer.TYPE);
-
-                bitmap = (Bitmap) declaredMethod.invoke(null, new Rect(), screenInfo.getDeviceSize().getWidth(), screenInfo.getDeviceSize().getHeight(), screenInfo.getRotation());
-
-            } else {
-                // I don't know how to implement rotation on Pie- versions
-                declaredMethod =
-                        clazz.getDeclaredMethod("screenshot", Integer.TYPE, Integer.TYPE);
-                bitmap = (Bitmap) declaredMethod.invoke(null, new Object[] {screenInfo.getDeviceSize().getWidth(), screenInfo.getDeviceSize().getHeight()});
-            }
-
-            if (bitmap != null)
-            {
-                Ln.d(">>> bmp generated.");
-                return cropAndSaveImage(bitmap, screenInfo.getContentRect());
-            }
-
-
-
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
+        if(bitmap != null)
+            return cropAndSaveImage(bitmap, screenInfo.getContentRect());
+        
         return null;
-
     }
-
 
     /**
      * Temp method for saving image to disk. We should send it another way
      * @param bitmap
      * @param crop
      */
-    // TODO: Do it in another Thread?
-    // TODO: Choose a picture format
-    // TODO: Choose a default name
+    // TODO: Is this the right place and way to do it?
+    // TODO: It would be great to choose JPG or PNG and be able to choose a default name
 
     private String cropAndSaveImage(Bitmap bitmap, Rect crop) {
 
         Matrix matrix = new Matrix();
         Bitmap finalBitmap = Bitmap.createBitmap(bitmap, crop.left, crop.top, crop.width(), crop.height(), matrix, true);
-
 
         String root = Environment.getExternalStorageDirectory().toString();
         File myDir = new File(root );

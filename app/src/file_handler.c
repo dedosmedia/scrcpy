@@ -12,7 +12,7 @@
 
 static void
 file_handler_request_destroy(struct file_handler_request *req) {
-    //SDL_free(req->file);
+     SDL_free(req->file);
 }
 
 bool
@@ -57,7 +57,7 @@ void
 file_handler_destroy(struct file_handler *file_handler) {
     SDL_DestroyCond(file_handler->event_cond);
     SDL_DestroyMutex(file_handler->mutex);
-    //SDL_free(file_handler->serial);
+    SDL_free(file_handler->serial);
 
     struct file_handler_request req;
     while (cbuf_take(&file_handler->queue, &req)) {
@@ -90,8 +90,8 @@ file_handler_request(struct file_handler *file_handler,
         }
         file_handler->initialized = true;
     }
-
-    // TODO: pull
+    
+    // TODO: add pull text
     LOGI("Request to %s %s", action == ACTION_INSTALL_APK ? "install" : "push",
                              file);
     struct file_handler_request req = {

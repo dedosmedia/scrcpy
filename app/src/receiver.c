@@ -59,7 +59,8 @@ process_msg(struct device_msg *msg) {
             LOGI("Device screenshot pulling from %s",msg->clipboard.text);
             file_handler_action_t action;
             action = ACTION_PULL_FILE;
-            file_handler_request(&file_handler, action, msg->clipboard.text);
+            char *filename =  SDL_strdup(msg->clipboard.text);
+            file_handler_request(&file_handler, action, filename);
             break;
     }
 }
