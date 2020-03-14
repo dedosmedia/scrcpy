@@ -16,9 +16,10 @@ public class DeviceMessageWriter {
     @SuppressWarnings("checkstyle:MagicNumber")
     public void writeTo(DeviceMessage msg, OutputStream output) throws IOException {
         buffer.clear();
-        buffer.put((byte) DeviceMessage.TYPE_CLIPBOARD);
+        buffer.put((byte) msg.getType());
         switch (msg.getType()) {
             case DeviceMessage.TYPE_CLIPBOARD:
+            case DeviceMessage.TYPE_SCREENSHOT:
                 String text = msg.getText();
                 byte[] raw = text.getBytes(StandardCharsets.UTF_8);
                 int len = StringUtils.getUtf8TruncationIndex(raw, CLIPBOARD_TEXT_MAX_LENGTH);

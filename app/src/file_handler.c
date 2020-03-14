@@ -12,7 +12,7 @@
 
 static void
 file_handler_request_destroy(struct file_handler_request *req) {
-    SDL_free(req->file);
+    //SDL_free(req->file);
 }
 
 bool
@@ -57,7 +57,7 @@ void
 file_handler_destroy(struct file_handler *file_handler) {
     SDL_DestroyCond(file_handler->event_cond);
     SDL_DestroyMutex(file_handler->mutex);
-    SDL_free(file_handler->serial);
+    //SDL_free(file_handler->serial);
 
     struct file_handler_request req;
     while (cbuf_take(&file_handler->queue, &req)) {
@@ -85,6 +85,7 @@ file_handler_request(struct file_handler *file_handler,
                      file_handler_action_t action, char *file) {
     // start file_handler if it's used for the first time
     if (!file_handler->initialized) {
+        LOGI("NOT INITIALIZED");
         if (!file_handler_start(file_handler)) {
             return false;
         }

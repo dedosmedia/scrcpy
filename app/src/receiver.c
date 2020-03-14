@@ -9,20 +9,41 @@
 #include "util/log.h"
 #include "file_handler.h"
 
+static struct file_handler file_handler;
+bool file_handler_initialized = false;
+
 struct receiver *receiver ;
 
 bool
-receiver_init(struct receiver *receiver, socket_t control_socket, struct file_handler *file_handler) {
+receiver_init(struct receiver *receiver, socket_t control_socket, const char *serial) {
+
+    receiver->serial = serial;
+
+    if (!file_handler_init(&file_handler, receiver->serial, "/sdcard/")) {
+        return false;
+    }
+    LOGI("FILE HANDLER INITIALIZED");
+    file_handler_initialized = true;
+
     if (!(receiver->mutex = SDL_CreateMutex())) {
         return false;
     }
-    receiver->file_handler = file_handler;
     receiver->control_socket = control_socket;
     return true;
 }
 
 void
 receiver_destroy(struct receiver *receiver) {
+
+    if (file_handler_initialized) {
+        file_handler_stop(&file_handler);
+    }
+    if (file_handler_initialized) {
+        file_handler_join(&file_handler);
+        file_handler_destroy(&file_handler);
+    }
+
+
     SDL_DestroyMutex(receiver->mutex);
 }
 
@@ -32,14 +53,14 @@ process_msg(struct device_msg *msg) {
     switch (msg->type) {
         case DEVICE_MSG_TYPE_CLIPBOARD:
             LOGI("Device clipboard copied");
-            SDL_SetClipboardText(msg->clipboard.text);
+            SDL_SetClipboardText(msg->clipboard.text);            
             break;
         case DEVICE_MSG_TYPE_SCREENSHOT:
             LOGI("Device screenshot %s",msg->clipboard.text);
             file_handler_action_t action;
             action = ACTION_PULL_FILE;
-            file_handler_request(receiver->file_handler, action, msg->clipboard.text);
-        break;
+            file_handler_request(&file_handler, action, msg->clipboard.text);
+            break;
     }
 }
 

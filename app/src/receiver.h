@@ -13,14 +13,13 @@
 // managed by the controller
 struct receiver {
     socket_t control_socket;
-    struct file_handler *file_handler;
     SDL_Thread *thread;
     SDL_mutex *mutex;
-    
+    const char *serial;
 };
 
 bool
-receiver_init(struct receiver *receiver, socket_t control_socket, struct file_handler *file_handler);
+receiver_init(struct receiver *receiver, socket_t control_socket, const char *serial);
 
 void
 receiver_destroy(struct receiver *receiver);
